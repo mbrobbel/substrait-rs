@@ -2,15 +2,19 @@ status = [
   "Check (default)",
   "Check (pbjson)",
   "Check (protoc)",
+  "Check (semver)",
   "Check (serde)",
   "Test (default)",
   "Test (pbjson)",
+  "Test (semver)",
   "Test (serde)",
   "Rustfmt",
   "Clippy (default)",
   "Clippy (pbjson)",
+  "Clippy (semver)",
   "Clippy (serde)",
   "Rustdoc",
+  "Package",
 ]
 delete_merged_branches = true
 timeout_sec = 600
