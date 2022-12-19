@@ -51,3 +51,5 @@ jobs:
               
               Could you please update your PR title to match the specification?`
             })
+
+            core.setFailed('Invalid PR title')
