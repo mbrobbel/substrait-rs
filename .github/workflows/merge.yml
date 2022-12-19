@@ -3,9 +3,10 @@
 name: Merge
 
 on:
-  branches:
-    - trying
-    - staging
+  push:
+    branches:
+      - trying
+      - staging
 
 jobs:
   conventional-commits:
