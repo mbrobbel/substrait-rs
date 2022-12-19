@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
       - run: npm install @commitlint/config-conventional
-      - run: echo ${{ github.event.pull_request.title }} | npx commitlint --extends @commitlint/config-conventional
+      - run: echo "${{ github.event.pull_request.title }}" | npx commitlint --extends @commitlint/config-conventional
       - if: failure()
         run: actions/github-script@v6
         with:
