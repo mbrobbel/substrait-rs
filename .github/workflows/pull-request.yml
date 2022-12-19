@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: Apache-2.0
+
+name: Pull request
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+jobs:
+  conventional-commits:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+      - run: npm install @commitlint/config-conventional
+      - run: echo ${{ github.event.pull_request.title }} | npx commitlint --extends @commitlint/config-conventional
+      - if: failure()
+        run: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Thanks for opening this PR. 
+              
+              Substrait follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for PR titles to help automate releases.
+              The PR title is used as the commit message when squash merging.
+              
+              Could you please update your PR title to match the specification?'
+            })
