@@ -17,39 +17,38 @@ on:
       - synchronize
 
 jobs:
-  conventional-commits:
-    name: Conventional Commits
+  title:
+    name: Title
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v3
       - run: npm install @commitlint/config-conventional
       - id: commitlint
         run: echo "${{ github.event.pull_request.title }}" | npx commitlint --extends @commitlint/config-conventional
-        continue-on-error: true
-      - uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.checks.create({
-              name: 'Conventional Commits',
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: context.sha,
-              conclusion: '${{ steps.commitlint.outcome }}' === 'failure' ? 'action_required' : 'success'
-            })
-      - if: steps.commitlint.outcome == 'failure'
+      - if: failure()
         uses: actions/github-script@v6
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `Thanks for opening this PR. 
-              
-              Substrait follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for PR titles to help automate releases.
+            const body = `Substrait follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for automate releases.
               The PR title is used as the commit message when squash merging.
               
-              Could you please update your PR title to match the specification?`
-            })
+              Please update your PR title to match the specification.`
 
+            const list_comments = github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const comments = await github.paginate(list_comments)
+            for (const comment of comments) {
+              if (comment.body === body) {
+                return // Already commented
+              }
+            }
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: 
+            })
             core.setFailed('Invalid PR title')
