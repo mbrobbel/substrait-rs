@@ -1,14 +1,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
-name: Pull request
+name: Pull Request
 
 on:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - edited
-      - synchronize
   pull_request_target:
     types:
       - opened
@@ -30,21 +24,26 @@ jobs:
         with:
           script: |
             const message = `Substrait follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for automate releases.
-              The PR title is used as the commit message when squash merging.
+              The PR title is used as the merge commit message.
               
               Please update your PR title to match the specification.`
 
+            // Get list of current comments
             const list_comments = github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number
             })
             const comments = await github.paginate(list_comments)
+
+            // Check if this job already commented
             for (const comment of comments) {
               if (comment.body === message) {
                 return // Already commented
               }
             }
+
+            // Post the comment about Conventional Commits
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
