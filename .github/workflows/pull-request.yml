@@ -17,8 +17,20 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
       - run: npm install @commitlint/config-conventional
-      - run: echo "${{ github.event.pull_request.title }}" | npx commitlint --extends @commitlint/config-conventional
-      - if: failure()
+      - id: commitlint
+        run: echo "${{ github.event.pull_request.title }}" | npx commitlint --extends @commitlint/config-conventional
+        continue-on-error: true
+      - run: actions/github-script@v6
+        with:
+          script: |
+            github.rest.checks.create({
+              name: 'Conventional Commits',
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              conclusion: ${{ steps.commitlint.outcome }} == 'failure' ? 'action_required' : 'success'
+            })
+      - if: steps.commitlint.outcome == 'failure'
         run: actions/github-script@v6
         with:
           script: |
