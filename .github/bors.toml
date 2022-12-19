@@ -12,7 +12,6 @@ status = [
   "License",
   "Rustdoc",
   "Rustfmt",
-  "Rustfmt",
   "Test (default)",
   "Test (pbjson)",
   "Test (serde)",
