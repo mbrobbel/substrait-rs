@@ -29,7 +29,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const body = `Substrait follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for automate releases.
+            const message = `Substrait follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for automate releases.
               The PR title is used as the commit message when squash merging.
               
               Please update your PR title to match the specification.`
@@ -37,11 +37,11 @@ jobs:
             const list_comments = github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
+              issue_number: context.issue.number
+            })
             const comments = await github.paginate(list_comments)
             for (const comment of comments) {
-              if (comment.body === body) {
+              if (comment.body === message) {
                 return // Already commented
               }
             }
@@ -49,6 +49,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body: 
+              body: message
             })
             core.setFailed('Invalid PR title')
