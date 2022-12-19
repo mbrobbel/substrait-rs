@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-node@v3
       - run: npm install @commitlint/config-conventional
       - id: commitlint
-        run: echo "${{ github.event.pull_request.title }}" | npx commitlint --extends @commitlint/config-conventional
+        run: echo "{echo "${{ github.event.pull_request.title }}" | npx commitlint --extends @commitlint/config-conventional
         continue-on-error: true
       - uses: actions/github-script@v6
         with:
@@ -34,7 +34,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: context.sha,
-              conclusion: ${{ steps.commitlint.outcome }} == 'failure' ? 'action_required' : 'success'
+              conclusion: '${{ steps.commitlint.outcome }}' === 'failure' ? 'action_required' : 'success'
             })
       - if: steps.commitlint.outcome == 'failure'
         uses: actions/github-script@v6
@@ -44,10 +44,10 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'Thanks for opening this PR. 
+              body: `Thanks for opening this PR. 
               
               Substrait follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for PR titles to help automate releases.
               The PR title is used as the commit message when squash merging.
               
-              Could you please update your PR title to match the specification?'
+              Could you please update your PR title to match the specification?`
             })
