@@ -12,9 +12,7 @@ jobs:
         feature:
           - default
           - pbjson
-          - protoc
-          - semver
-          - serde
+          - semver,serde
     steps:
       - uses: actions/checkout@v3
         with:
@@ -36,8 +34,7 @@ jobs:
         feature:
           - default
           - pbjson
-          - semver
-          - serde
+          - semver,serde
     steps:
       - uses: actions/checkout@v3
         with:
@@ -66,8 +63,7 @@ jobs:
         feature:
           - default
           - pbjson
-          - semver
-          - serde
+          - semver,serde
     steps:
       - uses: actions/checkout@v3
         with:
@@ -88,4 +84,5 @@ jobs:
           fetch-depth: 0
           submodules: recursive
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo package --allow-dirty
+      - run: cargo build
+      - run: cargo package --features protoc --allow-dirty
