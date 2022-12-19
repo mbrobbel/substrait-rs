@@ -26,7 +26,7 @@ jobs:
       - id: commitlint
         run: echo "${{ github.event.pull_request.title }}" | npx commitlint --extends @commitlint/config-conventional
         continue-on-error: true
-      - run: actions/github-script@v6
+      - uses: actions/github-script@v6
         with:
           script: |
             github.rest.checks.create({
@@ -37,7 +37,7 @@ jobs:
               conclusion: ${{ steps.commitlint.outcome }} == 'failure' ? 'action_required' : 'success'
             })
       - if: steps.commitlint.outcome == 'failure'
-        run: actions/github-script@v6
+        uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.createComment({
