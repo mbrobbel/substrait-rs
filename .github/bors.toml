@@ -8,7 +8,6 @@ status = [
   "Clippy (default)",
   "Clippy (pbjson)",
   "Clippy (serde)",
-  "Conventional Commits",
   "License",
   "Rustdoc",
   "Rustfmt",
