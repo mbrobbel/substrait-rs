@@ -11,9 +11,9 @@ jobs:
       matrix:
         feature:
           - default
+          - full
           - pbjson
           - protoc
-          - semver,serde
     steps:
       - uses: actions/checkout@v3
         with:
@@ -34,8 +34,8 @@ jobs:
       matrix:
         feature:
           - default
+          - full
           - pbjson
-          - semver,serde
     steps:
       - uses: actions/checkout@v3
         with:
@@ -63,8 +63,8 @@ jobs:
       matrix:
         feature:
           - default
+          - full
           - pbjson
-          - semver,serde
     steps:
       - uses: actions/checkout@v3
         with:

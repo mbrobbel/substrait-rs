@@ -53,6 +53,14 @@ pub fn semver() -> semver::Version {
     }
 }
 
+/// Returns the requirement of this crate for other Substrait versions.
+///
+/// Can be used to check if this crate can correctly handle a plan.
+#[cfg(feature = "semver")]
+pub fn semver_req() -> semver::VersionReq {
+    semver::VersionReq::parse(&format!("^{}", semver())).unwrap()
+}
+
 #[cfg(test)]
 // These tests ensure this crate uses a tagged Substrait release.
 mod tests {
@@ -77,5 +85,11 @@ mod tests {
         #[cfg(feature = "semver")]
         assert!(super::semver().pre.is_empty());
         assert_eq!(super::SUBSTRAIT_GIT_DEPTH, 0);
+    }
+
+    #[test]
+    #[cfg(feature = "semver")]
+    fn semver_compat() {
+        assert!(super::semver_req().matches(&super::semver()));
     }
 }

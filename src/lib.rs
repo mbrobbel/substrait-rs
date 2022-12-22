@@ -151,11 +151,103 @@
     html_favicon_url = "https://raw.githubusercontent.com/substrait-io/substrait/main/site/docs/img/logo.svg"
 )]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![deny(missing_docs)]
 
-#[allow(clippy::needless_borrow, clippy::large_enum_variant)]
+#[allow(clippy::needless_borrow, clippy::large_enum_variant, missing_docs)]
 pub mod proto;
-
-#[allow(clippy::uninlined_format_args)]
+#[allow(clippy::uninlined_format_args, missing_docs)]
 pub mod text;
 
 pub mod version;
+
+// Optional modules
+#[cfg(feature = "validate")]
+pub mod validate;
+
+// #[derive(Error, Debug)]
+// pub enum ReadRelError {
+//     #[error("base schema is required")]
+//     BaseSchemaMissing,
+//     #[error("read relation definition is required")]
+//     DefinitionMissing,
+//     #[error("best effort filter expression error")]
+//     Filter(#[from] ExpressionError),
+// }
+
+// trait Relation {
+//     fn common(&self) -> &proto::RelCommon;
+// }
+// trait InputRelation: Relation {}
+
+// // pub struct CommonRelation<T> {
+// //     common: Option<proto::RelCommon>,
+// //     relation: T,
+// // }
+
+// pub struct ReadRelation {}
+
+// #[derive(Error, Debug)]
+// pub enum ExpressionError {}
+
+// impl<C: Context> Validate<C> for proto::Expression {
+//     type Validated = Self;
+//     type Error = ExpressionError;
+
+//     fn validate(self, context: &mut C) -> Result<Self::Validated, Self::Error> {
+//         Ok(self)
+//     }
+// }
+
+// /// Type wrapper that validates that this expression is a predicate i.e. its return type is bool.
+// pub struct PredicateExpression(proto::Expression);
+
+// impl<C: Context> Validate<C> for PredicateExpression {
+//     type Validated = proto::Expression;
+//     type Error = ExpressionError;
+
+//     fn validate(self, context: &mut C) -> Result<Self::Validated, Self::Error> {
+//         // it should be a validate expression
+//         self.0.validate(context)
+//         // and it should return a bool
+//     }
+// }
+
+// impl<C: Context> Validate<C> for proto::ReadRel {
+//     type Validated = ReadRelation;
+//     type Error = ReadRelError;
+
+//     fn validate(self, context: &mut C) -> Result<Self::Validated, Self::Error> {
+//         let proto::ReadRel {
+//             common,
+//             base_schema,
+//             filter,
+//             best_effort_filter,
+//             projection,
+//             advanced_extension,
+//             read_type,
+//         } = self;
+
+//         let read_type = read_type.ok_or(ReadRelError::DefinitionMissing)?;
+//         let base_schema = base_schema.ok_or(ReadRelError::BaseSchemaMissing)?;
+
+//         let filer = filter
+//             .map(|expression| PredicateExpression(*expression).validate(context))
+//             .transpose()?;
+
+//         let projection = projection
+//             .map(|projection| projection.validate(context))
+//             .transpose()?;
+
+//         Ok(ReadRelation {})
+//     }
+// }
+
+// pub trait Validate<C: Context> {
+//     type Validated;
+//     type Error: std::error::Error;
+
+//     fn validate(self, context: &mut C) -> Result<Self::Validated, Self::Error>;
+// }
+
+// pub mod explain;
+// pub mod relation;
